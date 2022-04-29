@@ -2,9 +2,19 @@ library("tidyverse")
 
 birch <- read.table('birch.dat', header = TRUE)
 
+#check if relationships are linear
+plot(birch)
 
 pairs(birch, panel = panel.smooth)
 cor(birch)
+#find correlation in response and response (correlation will b 1)
+# since they are the same shit
+
+cov(birch)
+# find co variances. Sample variances
+
+#feed our data with multiple regression
+
 birch.lm = lm(Response ~ Cyield + BEC + pH, data = birch)
 summary(birch.lm)
 coefficients(birch.lm)
