@@ -6,7 +6,8 @@ library("stringr")
 library("ggplot2")
 library("knitr")
 library("ggrepel")
-library("patchwork") library("janitor")
+library("patchwork")
+library("janitor")
 library("usethis")
 library("roxygen2")
 library("testthat")
@@ -56,9 +57,34 @@ plot(fitted(a), residuals(a))
 plot(a, which = 2)
 
 
+removeOutlier = ecoli.dat[-findOutlier,]
+
+ecoliLM = lm(HEC ~ HGMF, data = removeOutlier)
+plot(fitted(ecoliLM), residuals(ecoliLM), main = "Residuals vs Fitted")
+qqnorm(residuals(ecoliLM), main = "Normal Q-Q plot of residuals")
+
+plot(removeOutlier$HEC,removeOutlier$HGMF )
+abline(ecoliLM)
+hgmfgrid = seq(from = -1, to = 3, by = 0.5)
+HGMFdat = data.frame(HGMF = hgmfgrid)
+predvals = predict.lm(ecoliLM, newdata = HGMFdat, interval = 'prediction')
+confvals = predict.lm(ecoliLM, newdata = HGMFdat, interval = 'confidence')
+lines(hgmfgrid, predvals[, 2], lty = 2)
+lines(hgmfgrid, predvals[, 3], lty = 2)
+lines(hgmfgrid, confvals[, 2], lty = 3)
+lines(hgmfgrid, confvals[, 3], lty = 3)
+
+summary(ecoliLM)
+
+x = which(hgmfgrid == 1)
+
+predband1 = predvals[x, 2:3]
+confband1 = confvals[x, 2:3]
+head(predvals)
 
 
+which(hgmfgrid == 1)
 
-
-
+predband1
+confband1
 
